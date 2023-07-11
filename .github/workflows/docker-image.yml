@@ -1,21 +1,20 @@
 # This workflow will build a Java project with Maven
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+# test
 name: Java CI with Maven
 
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
+    branches: main
   pull_request:
-    branches:
-      - main
-
+    branches: main
 permissions:
-  id-token: write
-  contents: read
+        id-token: write
+        contents: read
 
 jobs:
+
   Docker:
     name: build image and publish
     runs-on: ubuntu-latest
@@ -23,49 +22,46 @@ jobs:
       env-file: my-environment-file.env
       CLUSTER_NAME: pwGen
       RESOURSE_GROUP: SWE
-
+      
     steps:
       - name: Set up JDK 18
         uses: actions/setup-java@v1
         with:
-          java-version: 18
-
+         java-version: 18
       - name: Build with Maven
         run: mvn -B clean package
-
+        
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-
+          
       - name: Build Docker image
         run: docker build -t hajaraburmeileh/simplecalculator2:${{ github.sha }} -t hajaraburmeileh/simplecalculator2:latest .
-
       - name: Publish Docker image
         run: docker push hajaraburmeileh/simplecalculator2 --all-tags
-
+             
       - uses: actions/checkout@v3
-
-      - name: Azure login
-        uses: azure/login@v1
+      - uses: azure/login@92a5484dfaf04ca78a94597f4f19fea633851fa2
+        name: Azure login
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Set up kubelogin for non-interactive login
-        uses: azure/k8s-set-context@v1
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+      - uses: azure/use-kubelogin@v1
+        name: Set up kubelogin for non-interactive login
         with:
-          kubeconfig: ${{ secrets.KUBE_CONFIG_DATA }}
-
-      - name: Get K8s context
-        uses: azure/aks-set-context@v1
+          kubelogin-version: v0.0.25
+      - uses: azure/aks-set-context@v3
+        name: Get K8s context
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          admin: "false"
           cluster-name: ${{ env.CLUSTER_NAME }}
           resource-group: ${{ env.RESOURSE_GROUP }}
-
-      - name: Deploy to Kubernetes
-        uses: azure/k8s-deploy@v1
+          use-kubelogin: "true"
+          
+      - uses: Azure/k8s-deploy@v1
         with:
           manifests: |
             kubernetes/deploy.yml
