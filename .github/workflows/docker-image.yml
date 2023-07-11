@@ -6,9 +6,9 @@ name: Java CI with Maven
 on:
   workflow_dispatch:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 permissions:
       id-token: write
       contents: read
@@ -55,9 +55,9 @@ jobs:
         run: mvn -B clean package
         
       - name: Build Docker image
-        run: docker build -t jtamimi/ppu2023:latest .
+        run: docker build -t hajaraburmeileh/CI-CD:latest .
       - name: Publish Docker image
-        run: docker push jtamimi/ppu2023
+        run: docker push hajaraburmeileh/CI-CD
         
       - uses: Azure/aks-set-context@v1
         with:
