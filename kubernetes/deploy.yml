@@ -16,7 +16,7 @@ spec:
         "kubernetes.io/os": linux
       containers:
       - name: nginx
-        image: hajaraburmeileh/CI-CD:latest
+        image: hajaraburmeileh/simplecalculator2:latest
         ports:
         - containerPort: 8080
         resources:
