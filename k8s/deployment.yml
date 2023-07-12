@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: githubactions-aks-demo
+  name: githubactions-aks-hajar
 spec:
   selector:
     matchLabels:
-      app: githubactions-aks-demo
+      app: githubactions-aks-hajar
   template:
     metadata:
       labels:
-        app: githubactions-aks-demo
+        app: githubactions-aks-hajar
     spec:
       containers:
       - name: githubactions-aks-hajar
