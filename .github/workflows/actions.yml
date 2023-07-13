@@ -97,14 +97,11 @@ jobs:
         run: docker push hajaraburmeileh/simplecalc --all-tags
              
       - uses: actions/checkout@v3
-      - uses: azure/login@92a5484dfaf04ca78a94597f4f19fea633851fa2
+      - uses: azure/login@v1
         name: Azure login
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          enable-AzPSSession: true
-          
+          creds: ${{secrets.AZURE_CREDENTIALS}}
+
       - uses: azure/use-kubelogin@v1
         name: Set up kubelogin for non-interactive login
         with:
