@@ -76,16 +76,21 @@ jobs:
       env-file: my-environment-file.env
       CLUSTER_NAME: simplecalccluser
       RESOURSE_GROUP: hajarscalc
+
       
 #     needs: [build]
     steps:
 
       - uses: actions/checkout@v1
+#       - name: Login to Docker Hub
+#         run: docker login -u ${{ secrets.DOCKER_USERNAME }}
+#           -p ${{ secrets.DOCKER_PASSWORD }}
+          
       - name: Login to Docker Hub
-         run: docker login -u ${{ secrets.DOCKER_USERNAME }}
-           -p ${{ secrets.DOCKER_PASSWORD }}
-          
-          
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build Docker image
         run: docker build -t hajaraburmeileh/simplecalc:${{ github.sha }} -t hajaraburmeileh/simplecalc:latest .
       - name: Publish Docker image
