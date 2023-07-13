@@ -81,9 +81,9 @@ jobs:
     steps:
 
       - uses: actions/checkout@v1
-#       - name: Login to Docker Hub
-#         run: docker login -u ${{ secrets.DOCKER_USERNAME }}
-#           -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Login to Docker Hub
+         run: docker login -u ${{ secrets.DOCKER_USERNAME }}
+           -p ${{ secrets.DOCKER_PASSWORD }}
           
           
       - name: Build Docker image
