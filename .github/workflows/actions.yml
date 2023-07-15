@@ -1,7 +1,7 @@
 # This workflow will build a Java project with Maven
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 # test
-name: Java CI with Maven
+name: docker deploy with azure cluster
 
 on:
   workflow_dispatch:
@@ -74,8 +74,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       env-file: my-environment-file.env
-      CLUSTER_NAME: simplecalccluser
-      RESOURSE_GROUP: hajarscalc
+      CLUSTER_NAME: helloppucluster
+      RESOURSE_GROUP: hajarhello
 
       
 #     needs: [build]
@@ -92,9 +92,9 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build Docker image
-        run: docker build -t hajaraburmeileh/simplecalc:${{ github.sha }} -t hajaraburmeileh/simplecalc:latest .
+        run: docker build -t hajaraburmeileh/hello:${{ github.sha }} -t hajaraburmeileh/hello:latest .
       - name: Publish Docker image
-        run: docker push hajaraburmeileh/simplecalc --all-tags
+        run: docker push hajaraburmeileh/hello --all-tags
              
       - uses: actions/checkout@v3
       - uses: azure/login@v1
@@ -119,4 +119,4 @@ jobs:
           manifests: |
             kubernetes/deploy.yml
           images: |
-            hajaraburmeileh/simplecalc:${{ github.sha }}
+            hajaraburmeileh/hello:${{ github.sha }}
